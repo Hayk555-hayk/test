@@ -17,16 +17,7 @@ use Illuminate\Support\Facades\Redis;
 */
 
 Route::get('/', function () {
-    // return view('welcome');
-    $data = json_encode(['title' => 'newPost->title', 'author' => 'newPost->author', 'publication_year' => 'newPost->publication_year']);
-    $result = Redis::publish('channel:blog.posts', $data);
-    echo $result;
-    if ($result !== false) {
-        echo "Message published successfully to $result subscribers.";
-    } else {
-        echo "Failed to publish message.";
-    }
-
+    return view('welcome');
 });
 
 

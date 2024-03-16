@@ -9,6 +9,7 @@ use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Predis\ClientInterface as RedisClient;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -25,6 +26,17 @@ return function (ContainerBuilder $containerBuilder) {
             $logger->pushHandler($handler);
 
             return $logger;
+        },
+        RedisClient::class => function (ContainerInterface $c) {
+            $redisSettings = $c->get(SettingsInterface::class)->get('redis');
+
+            $client = new Predis\Client([
+                'scheme' => $redisSettings['scheme'],
+                'host'   => $redisSettings['host'],
+                'port'   => $redisSettings['port'],
+            ]);
+
+            return $client;
         },
     ]);
 };

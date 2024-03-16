@@ -75,6 +75,7 @@ $app->addBodyParsingMiddleware();
 // Add Error Middleware
 $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, $logError, $logErrorDetails);
 $errorMiddleware->setDefaultErrorHandler($errorHandler);
+require __DIR__ . '/../app/RedisListener.php';  // Импортируйте путь к вашему файлу RedisListener.php
 
 // Run App & Emit Response
 $response = $app->handle($request);

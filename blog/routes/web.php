@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use Illuminate\Support\Facades\Redis;
 
 
 /*
@@ -16,7 +17,16 @@ use App\Http\Controllers\PostController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    $data = json_encode(['title' => 'newPost->title', 'author' => 'newPost->author', 'publication_year' => 'newPost->publication_year']);
+    $result = Redis::publish('channel:blog.posts', $data);
+    echo $result;
+    if ($result !== false) {
+        echo "Message published successfully to $result subscribers.";
+    } else {
+        echo "Failed to publish message.";
+    }
+
 });
 
 

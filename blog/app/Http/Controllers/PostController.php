@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use App\Models\Post;
 use App\Http\Requests\CreatePostRequest;
 
@@ -38,7 +38,9 @@ class PostController extends Controller
         }
 
         try {
-            Post::create($validatedData);
+            $newPost = Post::create($validatedData);
+            $data = json_encode(['title' => $newPost->title, 'author' => $newPost->author, 'publication_year' => $newPost->publication_year]);
+            Redis::publish('channel:blog.posts', $data);
             return redirect()->route('posts.index')->with('success', 'Post created successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors('Error creating post: ' . $e->getMessage())->withInput();

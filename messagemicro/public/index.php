@@ -11,8 +11,8 @@ use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../app/RedisListener.php';
 require __DIR__ . '/../config/db.php';
+require __DIR__ . '/../app/RedisListener.php';
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 

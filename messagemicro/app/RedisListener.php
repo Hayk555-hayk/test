@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__ . '/../vendor/autoload.php'; 
+
 use Predis\Client;
 $redis = new Client();
 
@@ -29,11 +31,7 @@ $redis->pubsubLoop(function ($event) {
             echo "Error: " . $e->getMessage();
         }
 
-
-        // Теперь можно использовать $postData для дальнейших действий
-        // Например, сохранить информацию о посте в базе данных Slim
     }
 });
 
-// Запустить слушателя
 $redis->disconnect();

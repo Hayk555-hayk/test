@@ -63,6 +63,31 @@
             padding: 1rem 0;
         }
 
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            font-size: 14px;
+            text-decoration: none;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: 1px solid #007bff;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
     </style>
 </head>
 <body>
@@ -83,6 +108,14 @@
             <div class="post-meta">
                 <p>Published on: {{ $post->created_at->format('M d, Y') }}</p>
                 <p>Publication yeat: {{ $post->publication_year }}</p>
+            </div>
+            <div class="post-actions">
+                <a href="{{ route('posts.edit', ['post' => $post->id]) }}" class="btn btn-primary">Edit</a>
+                <form action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST" style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete</button>
+                </form>
             </div>
         </article>
     </main>

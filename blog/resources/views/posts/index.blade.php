@@ -98,6 +98,7 @@
         <h1>Blog Posts</h1>
         <nav>
             <ul>
+                <li><a href="{{ url('/posts/create') }}">Create a post</a></li>
                 <li><a href="{{ url('/') }}">Back</a></li>
             </ul>
         </nav>

@@ -11,7 +11,8 @@ use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
-
+require __DIR__ . '/../app/RedisListener.php';
+require __DIR__ . '/../config/db.php';
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 
@@ -75,7 +76,6 @@ $app->addBodyParsingMiddleware();
 // Add Error Middleware
 $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, $logError, $logErrorDetails);
 $errorMiddleware->setDefaultErrorHandler($errorHandler);
-require __DIR__ . '/../app/RedisListener.php';  // Импортируйте путь к вашему файлу RedisListener.php
 
 // Run App & Emit Response
 $response = $app->handle($request);

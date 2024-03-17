@@ -15,7 +15,8 @@ class RedisService
             'action' => $action,
             'title' => $post->title,
             'author' => $post->author,
-            'publication_year' => $post->publication_year
+            'publication_year' => $post->publication_year,
+            'post_id' => $post->id
         ]);
 
         Redis::publish('blog:posts', $data);

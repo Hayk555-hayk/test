@@ -9,6 +9,14 @@ use App\Models\Post;
 
 class RedisService
 {
+    /**
+     * Send post data to Redis.
+     *
+     * @param Post $post
+     * @param string $action
+     *
+     * @return bool
+     */
     public function tellRedis(Post $post, string $action): bool
     {
         $data = json_encode([

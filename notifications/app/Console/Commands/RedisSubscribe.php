@@ -41,7 +41,7 @@ class RedisSubscribe extends Command
     {
         Redis::subscribe(['blog:posts'], function (string $message) {
             $this->notificationService->saveNotification($message);
-            echo "Action handled...";
+            echo "Action handled..." . PHP_EOL;
         });
     }
 }

@@ -119,5 +119,3 @@
     </footer>
 </body>
 </html>
-
-<p>posts {{$posts}}</p>

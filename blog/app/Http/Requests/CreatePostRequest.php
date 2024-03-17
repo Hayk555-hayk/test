@@ -24,7 +24,7 @@ class CreatePostRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
-            'publication_year' => 'required|integer|min:1|max:' . date('Y'),
+            'publication_year' => 'required|integer|min:1|max:2024' . date('Y'),
         ];
     }
 }

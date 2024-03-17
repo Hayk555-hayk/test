@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Redis;
 use App\Models\Post;
 use App\Http\Requests\CreatePostRequest;
+use App\Http\Helpers\PostHelper;
+use App\Http\Helpers\RedisHelper;
 
 class PostController extends Controller
 {
+    use PostHelper, RedisHelper;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = $this->getAllPosts();
         return view('posts.index', compact('posts'));
     }
 
@@ -38,9 +40,8 @@ class PostController extends Controller
         }
 
         try {
-            $newPost = Post::create($validatedData);
-            $data = json_encode(['title' => $newPost->title, 'author' => $newPost->author, 'publication_year' => $newPost->publication_year]);
-            Redis::publish('channel:blog.posts', $data);
+            $newPost = $this->createPost($validatedData);
+            $this->tellRedis($newPost, "post_created");
             return redirect()->route('posts.index')->with('success', 'Post created successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors('Error creating post: ' . $e->getMessage())->withInput();
@@ -52,7 +53,7 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $post = Post::find($id);
+        $post = $this->showPost($id);
         return view('posts.show', compact('post'));
     }
 
@@ -61,7 +62,7 @@ class PostController extends Controller
      */
     public function edit(string $id)
     {
-        $post = Post::find($id);
+        $post = $this->showPost($id);
         return view('posts.edit', compact('post'));
     }
 
@@ -71,8 +72,8 @@ class PostController extends Controller
     public function update(CreatePostRequest $request, Post $post)
     {
         $validatedData = $request->validated();
-
-        $post->update($validatedData);
+        $this->updatePost($post, $validatedData);
+        $this->tellRedis($post, "post_updated");
 
         return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
     }
@@ -83,8 +84,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        $post->delete();
-
+        $this->deletePost($post);
+        $this->tellRedis($post, "post_deleted");
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
     }
 }

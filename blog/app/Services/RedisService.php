@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Services;
+namespace App\Services;
 
 use Illuminate\Support\Facades\Redis;
 use App\Models\Post;
@@ -17,7 +17,7 @@ class RedisService
      *
      * @return bool
      */
-    public function tellRedis(Post $post, string $action): bool
+    public function publish(Post $post, string $action): bool
     {
         $data = json_encode([
             'action' => $action,

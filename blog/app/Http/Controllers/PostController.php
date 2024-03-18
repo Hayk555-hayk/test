@@ -7,8 +7,8 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Http\Requests\CreatePostRequest;
 use App\Http\Requests\UpdatePostRequest;
-use App\Http\Services\PostService;
-use App\Http\Services\RedisService;
+use App\Services\PostService;
+use App\Services\RedisService;
 use \Illuminate\View\View;
 use \Illuminate\Http\RedirectResponse;
 
@@ -61,13 +61,9 @@ class PostController extends Controller
     {
         $validatedData = $request->validated();
 
-        if (!$validatedData) {
-            return redirect()->back()->withErrors('Validation failed.')->withInput();
-        }
-
         try {
             $newPost = $this->postService->createPost($validatedData);
-            $this->redisService->tellRedis($newPost, "post_created");
+            $this->redisService->publish($newPost, 'post_created');
 
             return redirect()->route('posts.index')->with('success', 'Post created successfully.');
         } catch (\Exception $e) {
@@ -83,7 +79,7 @@ class PostController extends Controller
      */
     public function show(string $id): View
     {
-        $post = $this->postService->showPost($id);
+        $post = $this->postService->getById($id);
         return view('posts.show', compact('post'));
     }
 
@@ -93,9 +89,9 @@ class PostController extends Controller
      * @param string $id
      * @return View
      */
-    public function edit(string $id): View // Added return type declaration
+    public function edit(string $id): View
     {
-        $post = $this->postService->showPost($id);
+        $post = $this->postService->getById($id);
         return view('posts.edit', compact('post'));
     }
 
@@ -110,7 +106,7 @@ class PostController extends Controller
     {
         $validatedData = $request->validated();
         $this->postService->updatePost($post, $validatedData); // Access updatePost method
-        $this->redisService->tellRedis($post, "post_updated");
+        $this->redisService->publish($post, 'post_updated');
 
         return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
     }
@@ -124,7 +120,7 @@ class PostController extends Controller
     public function destroy(Post $post): RedirectResponse
     {
         $this->postService->deletePost($post);
-        $this->redisService->tellRedis($post, "post_deleted");
+        $this->redisService->publish($post, 'post_deleted');
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
     }
 }

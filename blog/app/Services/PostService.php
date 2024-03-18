@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Services;
+namespace App\Services;
 
 use  \Illuminate\Database\Eloquent\Collection;
 use App\Models\Post;
@@ -38,7 +38,7 @@ class PostService
      *
      * @return Post|null
      */
-    public function showPost($id): ?Post
+    public function getById($id): ?Post
     {
         return Post::find($id);
     }

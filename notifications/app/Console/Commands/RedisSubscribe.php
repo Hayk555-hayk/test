@@ -6,7 +6,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
-use App\Http\Services\PostNotificationService;
+use App\Services\PostNotificationService;
 
 
 class RedisSubscribe extends Command
@@ -41,7 +41,7 @@ class RedisSubscribe extends Command
     {
         Redis::subscribe(['blog:posts'], function (string $message) {
             $this->notificationService->saveNotification($message);
-            echo "Action handled..." . PHP_EOL;
+            echo 'Action handled...' . PHP_EOL;
         });
     }
 }
